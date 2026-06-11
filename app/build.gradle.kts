@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 
     id("com.google.gms.google-services")
 }
@@ -63,6 +64,16 @@ dependencies {
     // Koin
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+
+    // Ktor
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.kotlinx.serialization.json)
+
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.ktor)
 
     // Import the Firebase BoM
     implementation(platform(libs.firebase.bom))
