@@ -46,6 +46,11 @@ fun Navigation(backStack: NavBackStack<NavKey>, innerPadding: PaddingValues) {
                 WishlistDetailScreen(
                     id = key.id,
                     onBackClick = { backStack.removeLastOrNull() },
+                    onNavigateToCollection = { vinylId ->
+                        backStack.clear()
+                        backStack.add(BackStackKey.Collection)
+                        backStack.add(BackStackKey.CollectionDetail(vinylId))
+                    },
                 )
             }
         },

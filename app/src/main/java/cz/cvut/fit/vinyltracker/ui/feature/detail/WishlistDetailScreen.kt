@@ -34,12 +34,18 @@ import org.koin.core.parameter.parametersOf
 fun WishlistDetailScreen(
     id: Long,
     onBackClick: () -> Unit,
+    onNavigateToCollection: (Long) -> Unit,
     viewModel: WishlistDetailViewModel = koinViewModel(parameters = { parametersOf(id) })
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
 
     LaunchedEffect(state.isDeleted) { if (state.isDeleted) onBackClick() }
+    LaunchedEffect(state.moveDialogState) {
+        if (state.moveDialogState == MoveDialogState.NAVIGATE_TO_COLLECTION) {
+            onNavigateToCollection(id)
+        }
+    }
 
     when (state.moveDialogState) {
         MoveDialogState.CONFIRM -> MoveConfirmDialog(
@@ -51,7 +57,7 @@ fun WishlistDetailScreen(
             vinylTitle = state.vinyl?.title.orEmpty(),
             onDismiss = viewModel::dismissCongratulations,
         )
-        MoveDialogState.NONE -> Unit
+        MoveDialogState.NONE, MoveDialogState.NAVIGATE_TO_COLLECTION -> Unit
     }
 
     DetailLoadingWrapper(

@@ -48,6 +48,6 @@ class WishlistDetailViewModel(
     }
 
     fun dismissCongratulations() {
-        _state.update { it.copy(moveDialogState = MoveDialogState.NONE, isDeleted = true) }
+        _state.update { it.copy(moveDialogState = MoveDialogState.NAVIGATE_TO_COLLECTION) }
     }
 }

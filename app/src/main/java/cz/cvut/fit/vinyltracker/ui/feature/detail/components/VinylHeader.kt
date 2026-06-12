@@ -45,8 +45,8 @@ fun VinylHeader(vinyl: Vinyl) {
                 model = vinyl.coverUrl,
                 contentDescription = stringResource(R.string.cd_album_cover),
                 modifier = Modifier
-                    .size(220.dp)
-                    .clip(RoundedCornerShape(8.dp)),
+                    .size(300.dp)
+                    .clip(RoundedCornerShape(5.dp)),
                 contentScale = ContentScale.Crop,
             )
         }
