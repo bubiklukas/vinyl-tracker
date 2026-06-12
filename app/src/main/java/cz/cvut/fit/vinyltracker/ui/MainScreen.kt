@@ -15,15 +15,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
+import cz.cvut.fit.vinyltracker.R
 import cz.cvut.fit.vinyltracker.ui.navigation.BackStackKey
 import cz.cvut.fit.vinyltracker.ui.navigation.Navigation
 
-private val tabs = listOf(BackStackKey.Collection, BackStackKey.Wishlist)
-private val tabLabels = listOf("Collection", "Wishlist")
-private val tabIcons = listOf(Icons.Filled.Album, Icons.Filled.Favorite)
+private data class BottomTab(
+    val key: BackStackKey,
+    val labelRes: Int,
+    val cdRes: Int,
+    val icon: ImageVector,
+)
+
+private val bottomTabs = listOf(
+    BottomTab(BackStackKey.Collection, R.string.tab_collection, R.string.cd_tab_collection, Icons.Filled.Album),
+    BottomTab(BackStackKey.Wishlist, R.string.tab_wishlist, R.string.cd_tab_wishlist, Icons.Filled.Favorite),
+)
 
 @Composable
 fun MainScreen() {
@@ -34,7 +45,7 @@ fun MainScreen() {
     }
     val currentTabIndex by remember {
         derivedStateOf {
-            tabs.indexOfLast { backStack.contains(it) }.coerceAtLeast(0)
+            bottomTabs.indexOfLast { backStack.contains(it.key) }.coerceAtLeast(0)
         }
     }
 
@@ -46,17 +57,22 @@ fun MainScreen() {
                 exit = slideOutVertically { it },
             ) {
                 NavigationBar {
-                    tabs.forEachIndexed { index, key ->
+                    bottomTabs.forEachIndexed { index, tab ->
                         NavigationBarItem(
                             selected = currentTabIndex == index,
                             onClick = {
                                 if (currentTabIndex != index) {
                                     backStack.clear()
-                                    backStack.add(key)
+                                    backStack.add(tab.key)
                                 }
                             },
-                            icon = { Icon(tabIcons[index], contentDescription = tabLabels[index]) },
-                            label = { Text(tabLabels[index]) },
+                            icon = {
+                                Icon(
+                                    imageVector = tab.icon,
+                                    contentDescription = stringResource(tab.cdRes),
+                                )
+                            },
+                            label = { Text(stringResource(tab.labelRes)) },
                         )
                     }
                 }

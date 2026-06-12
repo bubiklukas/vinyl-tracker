@@ -1,3 +1,34 @@
 <resources>
     <string name="app_name">Vinyl Tracker</string>
+
+    <!-- Bottom navigation tabs -->
+    <string name="tab_collection">Collection</string>
+    <string name="tab_wishlist">Wishlist</string>
+
+    <!-- Collection screen -->
+    <string name="collection_title">Collection</string>
+    <string name="collection_empty">No records yet</string>
+    <string name="collection_search_placeholder">Search artist, album…</string>
+
+    <!-- Wishlist screen -->
+    <string name="wishlist_title">Wishlist</string>
+    <string name="wishlist_empty">No records on wishlist yet</string>
+
+    <!-- Add record sheet -->
+    <string name="add_title">Add a record</string>
+    <string name="add_search_placeholder">Search artist or album…</string>
+    <string name="add_search_empty_hint">Type an artist or album name to search iTunes</string>
+    <string name="add_no_results">No results for \"%s\"</string>
+    <string name="add_fab_label">Add</string>
+
+    <!-- Vinyl list item badges -->
+    <string name="badge_collection">COLLECTION</string>
+    <string name="badge_wishlist">WISHLIST</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_close">Close</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_navigate_to_detail">Navigate to detail</string>
+    <string name="cd_tab_collection">Collection tab</string>
+    <string name="cd_tab_wishlist">Wishlist tab</string>
 </resources>
