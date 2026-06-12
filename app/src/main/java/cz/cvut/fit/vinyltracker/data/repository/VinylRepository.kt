@@ -10,21 +10,16 @@ import cz.cvut.fit.vinyltracker.domain.Vinyl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+/** Purely local Vinyl repository */
 class VinylRepository(
     private val vinylDao: VinylDao,
-    private val trackDao: TrackDao,
-    private val itunesApi: ItunesApi,
+    private val trackDao: TrackDao
 ) {
     fun getAll(): Flow<List<Vinyl>> =
         vinylDao.getAll().map { list -> list.map { it.toDomain() } }
 
-    /** Searches for albums on iTunes */
-    suspend fun search(query: String): List<Vinyl> =
-        itunesApi.search(query)
-
-    /** Gets tracks from an album on iTunes */
-    suspend fun getTracks(collectionId: Long): List<Track> =
-        itunesApi.getTracks(collectionId)
+    fun search(query: String): Flow<List<Vinyl>> =
+        vinylDao.search(query).map { list -> list.map { it.toDomain() } }
 
     suspend fun save(vinyl: Vinyl) {
         val id = vinylDao.insert(VinylEntity.fromDomain(vinyl))

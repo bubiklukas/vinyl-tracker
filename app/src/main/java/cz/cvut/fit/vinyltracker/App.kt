@@ -5,6 +5,8 @@ import androidx.room.Room
 import cz.cvut.fit.vinyltracker.data.local.AppDatabase
 import cz.cvut.fit.vinyltracker.data.remote.ItunesApi
 import cz.cvut.fit.vinyltracker.data.repository.VinylRepository
+import cz.cvut.fit.vinyltracker.domain.usecase.AddToCollectionUseCase
+import cz.cvut.fit.vinyltracker.domain.usecase.AddToWishlistUseCase
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -27,7 +29,7 @@ val appModule = module {
     single { get<AppDatabase>().vinylDao() }
     single { get<AppDatabase>().trackDao() }
 
-    single { VinylRepository(get(), get(), get()) }
+    single { VinylRepository(get(), get()) }
 
     // itunes.apple.com HttpClient
     single {
@@ -46,7 +48,8 @@ val appModule = module {
 
     single { ItunesApi(get()) }
 
-
+    single { AddToCollectionUseCase(get(), get()) }
+    single { AddToWishlistUseCase(get(), get()) }
 }
 
 class App : Application() {
