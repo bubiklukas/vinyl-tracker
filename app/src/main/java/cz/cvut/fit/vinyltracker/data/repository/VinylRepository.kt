@@ -25,8 +25,11 @@ class VinylRepository(
     fun getAll(): Flow<List<Vinyl>> =
         vinylDao.getAll().map { list -> list.map { it.toDomain() } }
 
-    fun search(query: String): Flow<List<Vinyl>> =
-        vinylDao.search(query).map { list -> list.map { it.toDomain() } }
+    fun searchCollection(query: String): Flow<List<Vinyl>> =
+        vinylDao.searchCollection(query).map { list -> list.map { it.toDomain() } }
+
+    fun searchWishlist(query: String): Flow<List<Vinyl>> =
+        vinylDao.searchWishlist(query).map { list -> list.map { it.toDomain() } }
 
     suspend fun save(vinyl: Vinyl) {
         val id = vinylDao.insert(VinylEntity.fromDomain(vinyl))

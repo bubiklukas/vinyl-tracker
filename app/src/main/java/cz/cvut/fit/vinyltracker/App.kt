@@ -10,7 +10,6 @@ import cz.cvut.fit.vinyltracker.domain.usecase.AddToWishlistUseCase
 import cz.cvut.fit.vinyltracker.ui.feature.add.AddViewModel
 import cz.cvut.fit.vinyltracker.ui.feature.collection.CollectionViewModel
 import cz.cvut.fit.vinyltracker.ui.feature.detail.DetailViewModel
-import cz.cvut.fit.vinyltracker.ui.feature.search.SearchViewModel
 import cz.cvut.fit.vinyltracker.ui.feature.wishlist.WishlistViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
@@ -23,7 +22,6 @@ import kotlinx.serialization.json.Json
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
-import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 
 val appModule = module {
@@ -61,7 +59,6 @@ val appModule = module {
     viewModel { CollectionViewModel(get()) }
     viewModel { WishlistViewModel(get()) }
     factory { params -> DetailViewModel(vinylId = params.get(), repository = get()) }
-    viewModel { SearchViewModel(get()) }
     viewModel { AddViewModel(get(), get(), get()) }
 }
 

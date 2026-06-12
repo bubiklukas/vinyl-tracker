@@ -4,8 +4,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.cvut.fit.vinyltracker.domain.Vinyl
 import cz.cvut.fit.vinyltracker.ui.feature.add.AddScreen
 import org.koin.androidx.compose.koinViewModel
@@ -13,14 +13,13 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun CollectionScreen(
     onVinylClick: (Long) -> Unit,
-    onSearchClick: () -> Unit,
     viewModel: CollectionViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     CollectionScreen(
         state = state,
         onVinylClick = onVinylClick,
-        onSearchClick = onSearchClick,
+        onQueryChange = viewModel::onQueryChange,
         onAddClick = viewModel::showAddSheet,
         onDismissSheet = viewModel::hideAddSheet,
     )
@@ -31,7 +30,7 @@ fun CollectionScreen(
 private fun CollectionScreen(
     state: CollectionScreenState,
     onVinylClick: (Long) -> Unit,
-    onSearchClick: () -> Unit,
+    onQueryChange: (String) -> Unit,
     onAddClick: () -> Unit,
     onDismissSheet: () -> Unit,
 ) {

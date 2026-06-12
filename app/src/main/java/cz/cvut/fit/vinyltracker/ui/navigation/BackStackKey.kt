@@ -11,7 +11,5 @@ sealed class BackStackKey : NavKey {
     @Serializable data class VinylDetail(val id: Long) : BackStackKey() {
         override val showBottomBar = false
     }
-    @Serializable data object Search : BackStackKey() {
-        override val showBottomBar = false
-    }
+
 }

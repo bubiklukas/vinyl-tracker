@@ -13,14 +13,13 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun WishlistScreen(
     onVinylClick: (Long) -> Unit,
-    onSearchClick: () -> Unit,
     viewModel: WishlistViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     WishlistScreen(
         state = state,
         onVinylClick = onVinylClick,
-        onSearchClick = onSearchClick,
+        onQueryChange = viewModel::onQueryChange,
         onAddClick = viewModel::showAddSheet,
         onDismissSheet = viewModel::hideAddSheet,
     )
@@ -31,7 +30,7 @@ fun WishlistScreen(
 private fun WishlistScreen(
     state: WishlistScreenState,
     onVinylClick: (Long) -> Unit,
-    onSearchClick: () -> Unit,
+    onQueryChange: (String) -> Unit,
     onAddClick: () -> Unit,
     onDismissSheet: () -> Unit,
 ) {

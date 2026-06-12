@@ -27,8 +27,12 @@ interface VinylDao {
     fun getAll(): Flow<List<VinylWithTracks>>
 
     @Transaction
-    @Query("SELECT * FROM vinyls WHERE title LIKE '%' || :query || '%' OR artist LIKE '%' || :query || '%'")
-    fun search(query: String): Flow<List<VinylWithTracks>>
+    @Query("SELECT * FROM vinyls WHERE owned = 1 AND (title LIKE '%' || :query || '%' OR artist LIKE '%' || :query || '%')")
+    fun searchCollection(query: String): Flow<List<VinylWithTracks>>
+
+    @Transaction
+    @Query("SELECT * FROM vinyls WHERE owned = 0 AND (title LIKE '%' || :query || '%' OR artist LIKE '%' || :query || '%')")
+    fun searchWishlist(query: String): Flow<List<VinylWithTracks>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vinyl: VinylEntity): Long
