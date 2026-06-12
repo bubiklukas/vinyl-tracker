@@ -75,6 +75,12 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.ktor)
 
+    // Navigation3
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
     // Import the Firebase BoM
     implementation(platform(libs.firebase.bom))
 
