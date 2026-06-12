@@ -28,7 +28,9 @@ val appModule = module {
 
     // Room DB
     single {
-        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "vinyl_db").build()
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "vinyl_db")
+            .fallbackToDestructiveMigration(dropAllTables = true) // dev only: wipe DB on schema change instead of crashing; replace with Migration for production
+            .build()
     }
 
     single { get<AppDatabase>().vinylDao() }
@@ -59,7 +61,7 @@ val appModule = module {
     viewModel { CollectionViewModel(get()) }
     viewModel { WishlistViewModel(get()) }
     viewModel { params -> DetailViewModel(vinylId = params.get(), repository = get()) }
-    viewModel { AddViewModel(get(), get(), get()) }
+    viewModel { AddViewModel(get(), get(), get(), get()) }
 }
 
 class App : Application() {

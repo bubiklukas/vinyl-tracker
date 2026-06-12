@@ -97,7 +97,6 @@ private fun CollectionScreen(
             SearchField(
                 query = state.query,
                 onQueryChange = onQueryChange,
-                placeholder = stringResource(R.string.collection_search_placeholder),
                 modifier = Modifier.padding(vertical = 12.dp),
             )
 

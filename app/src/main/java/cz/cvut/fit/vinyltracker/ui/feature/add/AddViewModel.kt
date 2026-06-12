@@ -3,6 +3,7 @@ package cz.cvut.fit.vinyltracker.ui.feature.add
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cz.cvut.fit.vinyltracker.data.remote.ItunesApi
+import cz.cvut.fit.vinyltracker.data.repository.VinylRepository
 import cz.cvut.fit.vinyltracker.domain.Vinyl
 import cz.cvut.fit.vinyltracker.domain.usecase.AddToCollectionUseCase
 import cz.cvut.fit.vinyltracker.domain.usecase.AddToWishlistUseCase
@@ -19,9 +20,12 @@ import kotlinx.coroutines.launch
 data class AddScreenState(
     val query: String = "",
     val results: List<Vinyl> = emptyList(),
-    val isLoading: Boolean = false,
+    val isSearchLoading: Boolean = false,
     val error: String? = null,
-    val addedVinylId: Long? = null,
+    val existingVinyls: Map<Long, Boolean> = emptyMap(), // itunesCollectionId -> owned
+    val selectedVinyls: List<Vinyl> = emptyList(),
+    val isSaving: Boolean = false,
+    val isDone: Boolean = false,
 )
 
 @OptIn(FlowPreview::class)
@@ -29,6 +33,7 @@ class AddViewModel(
     private val itunesApi: ItunesApi,
     private val addToCollectionUseCase: AddToCollectionUseCase,
     private val addToWishlistUseCase: AddToWishlistUseCase,
+    private val repository: VinylRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AddScreenState())
@@ -36,21 +41,26 @@ class AddViewModel(
 
     init {
         viewModelScope.launch {
+            repository.getAllItunesIds().collect { map ->
+                _state.update { it.copy(existingVinyls = map) }
+            }
+        }
+        viewModelScope.launch {
             _state
                 .map { it.query }
                 .distinctUntilChanged()
                 .debounce(300L)
                 .collectLatest { query ->
                     if (query.isBlank()) {
-                        _state.update { it.copy(results = emptyList(), isLoading = false) }
+                        _state.update { it.copy(results = emptyList(), isSearchLoading = false) }
                         return@collectLatest
                     }
-                    _state.update { it.copy(isLoading = true, error = null) }
+                    _state.update { it.copy(isSearchLoading = true, error = null) }
                     try {
                         val results = itunesApi.search(query)
-                        _state.update { it.copy(results = results, isLoading = false) }
+                        _state.update { it.copy(results = results, isSearchLoading = false) }
                     } catch (e: Exception) {
-                        _state.update { it.copy(error = e.message, isLoading = false) }
+                        _state.update { it.copy(error = e.message, isSearchLoading = false) }
                     }
                 }
         }
@@ -60,14 +70,30 @@ class AddViewModel(
         _state.update { it.copy(query = query) }
     }
 
-    fun onAddVinyl(vinyl: Vinyl, forCollection: Boolean) {
+    fun onToggleVinyl(vinyl: Vinyl) {
+        val collId = vinyl.itunesCollectionId ?: return
+        _state.update { s ->
+            val isSelected = s.selectedVinyls.any { it.itunesCollectionId == collId }
+            if (isSelected) {
+                s.copy(selectedVinyls = s.selectedVinyls.filter { it.itunesCollectionId != collId })
+            } else {
+                s.copy(selectedVinyls = s.selectedVinyls + vinyl)
+            }
+        }
+    }
+
+    fun onDone(forCollection: Boolean) {
+        val toSave = _state.value.selectedVinyls
+        if (toSave.isEmpty()) {
+            _state.update { it.copy(isDone = true) }
+            return
+        }
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
-            val result = if (forCollection) addToCollectionUseCase(vinyl) else addToWishlistUseCase(vinyl)
-            result.fold(
-                onSuccess = { _state.update { s -> s.copy(isLoading = false, addedVinylId = vinyl.itunesCollectionId) } },
-                onFailure = { e -> _state.update { s -> s.copy(isLoading = false, error = e.message) } },
-            )
+            _state.update { it.copy(isSaving = true) }
+            toSave.forEach { vinyl ->
+                if (forCollection) addToCollectionUseCase(vinyl) else addToWishlistUseCase(vinyl)
+            }
+            _state.update { it.copy(isSaving = false, isDone = true) }
         }
     }
 }

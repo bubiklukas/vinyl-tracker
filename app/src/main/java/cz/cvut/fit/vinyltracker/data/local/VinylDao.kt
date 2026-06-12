@@ -7,6 +7,8 @@ import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
+data class ItunesIdOwned(val itunesCollectionId: Long, val owned: Boolean)
+
 @Dao
 interface VinylDao {
 
@@ -26,6 +28,9 @@ interface VinylDao {
     @Query("SELECT * FROM vinyls")
     fun getAll(): Flow<List<VinylWithTracks>>
 
+    @Query("SELECT itunesCollectionId, owned FROM vinyls WHERE itunesCollectionId IS NOT NULL")
+    fun getAllItunesIds(): Flow<List<ItunesIdOwned>>
+
     @Transaction
     @Query("SELECT * FROM vinyls WHERE owned = 1 AND (title LIKE '%' || :query || '%' OR artist LIKE '%' || :query || '%')")
     fun searchCollection(query: String): Flow<List<VinylWithTracks>>
@@ -37,8 +42,8 @@ interface VinylDao {
     @Insert
     suspend fun insert(vinyl: VinylEntity): Long
 
-    @Query("UPDATE vinyls SET owned = :owned WHERE id = :id")
-    suspend fun updateOwned(id: Long, owned: Boolean)
+    @Query("UPDATE vinyls SET owned = 1, ownedSince = :ownedSince WHERE id = :id")
+    suspend fun moveToCollection(id: Long, ownedSince: String?)
 
     @Query("DELETE FROM vinyls WHERE id = :id")
     suspend fun delete(id: Long)

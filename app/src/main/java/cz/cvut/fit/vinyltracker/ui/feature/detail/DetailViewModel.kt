@@ -13,6 +13,7 @@ data class DetailScreenState(
     val vinyl: Vinyl? = null,
     val isLoading: Boolean = true,
     val error: String? = null,
+    val isDeleted: Boolean = false,
 )
 
 class DetailViewModel(
@@ -32,14 +33,13 @@ class DetailViewModel(
     }
 
     fun delete() {
-        viewModelScope.launch { repository.delete(vinylId) }
+        viewModelScope.launch {
+            repository.delete(vinylId)
+            _state.update { it.copy(isDeleted = true) }
+        }
     }
 
     fun moveToCollection() {
-        viewModelScope.launch { repository.setOwned(vinylId, owned = true) }
-    }
-
-    fun moveToWishlist() {
-        viewModelScope.launch { repository.setOwned(vinylId, owned = false) }
+        viewModelScope.launch { repository.moveToCollection(vinylId, java.time.LocalDateTime.now()) }
     }
 }

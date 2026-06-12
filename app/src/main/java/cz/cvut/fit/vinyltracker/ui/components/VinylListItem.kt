@@ -37,7 +37,8 @@ fun VinylListItem(
     vinyl: Vinyl,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    showBadge: Boolean = true,
+    showBadge: Boolean = false,
+    trailingContent: (@Composable () -> Unit)? = null,
 ) {
     Row(
         modifier = modifier
@@ -90,10 +91,14 @@ fun VinylListItem(
             )
         }
 
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = stringResource(R.string.cd_navigate_to_detail),
-            tint = CharcoalMuted,
-        )
+        if (trailingContent != null) {
+            trailingContent()
+        } else {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = stringResource(R.string.cd_navigate_to_detail),
+                tint = CharcoalMuted,
+            )
+        }
     }
 }

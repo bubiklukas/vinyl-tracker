@@ -25,19 +25,23 @@ class VinylRepository(
     fun getAll(): Flow<List<Vinyl>> =
         vinylDao.getAll().map { list -> list.map { it.toDomain() } }
 
+    fun getAllItunesIds(): Flow<Map<Long, Boolean>> =
+        vinylDao.getAllItunesIds().map { list -> list.associate { it.itunesCollectionId to it.owned } }
+
     fun searchCollection(query: String): Flow<List<Vinyl>> =
         vinylDao.searchCollection(query).map { list -> list.map { it.toDomain() } }
 
     fun searchWishlist(query: String): Flow<List<Vinyl>> =
         vinylDao.searchWishlist(query).map { list -> list.map { it.toDomain() } }
 
-    suspend fun save(vinyl: Vinyl) {
+    suspend fun save(vinyl: Vinyl): Long {
         val id = vinylDao.insert(VinylEntity.fromDomain(vinyl))
         trackDao.insertAll(vinyl.trackList.map { TrackEntity.fromDomain(it, id) })
+        return id
     }
 
-    suspend fun setOwned(id: Long, owned: Boolean) =
-        vinylDao.updateOwned(id, owned)
+    suspend fun moveToCollection(id: Long, ownedSince: java.time.LocalDateTime) =
+        vinylDao.moveToCollection(id, ownedSince.toString())
 
     suspend fun delete(id: Long) =
         vinylDao.delete(id)

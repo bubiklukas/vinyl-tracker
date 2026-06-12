@@ -76,6 +76,9 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.ktor)
 
+    // Palette (dominant color extraction)
+    implementation(libs.androidx.palette)
+
     // Navigation3
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)

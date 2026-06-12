@@ -9,9 +9,9 @@ class AddToCollectionUseCase(
     private val repository: VinylRepository,
     private val itunesApi: ItunesApi,
 ) {
-    suspend operator fun invoke(vinyl: Vinyl): Result<Unit> = runCatching {
+    suspend operator fun invoke(vinyl: Vinyl): Result<Long> = runCatching {
         val collectionId = vinyl.itunesCollectionId ?: throw MissingCollectionIdException()
         val tracks = itunesApi.getTracks(collectionId)
-        repository.save(vinyl.copy(trackList = tracks, owned = true))
+        repository.save(vinyl.copy(trackList = tracks, owned = true, ownedSince = java.time.LocalDateTime.now()))
     }
 }
