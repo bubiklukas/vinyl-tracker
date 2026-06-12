@@ -3,20 +3,13 @@ package cz.cvut.fit.vinyltracker.ui.feature.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cz.cvut.fit.vinyltracker.data.repository.VinylRepository
-import cz.cvut.fit.vinyltracker.domain.Vinyl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
-data class DetailScreenState(
-    val vinyl: Vinyl? = null,
-    val isLoading: Boolean = true,
-    val error: String? = null,
-    val isDeleted: Boolean = false,
-)
-
-class DetailViewModel(
+class WishlistDetailViewModel(
     private val vinylId: Long,
     private val repository: VinylRepository,
 ) : ViewModel() {
@@ -39,7 +32,22 @@ class DetailViewModel(
         }
     }
 
-    fun moveToCollection() {
-        viewModelScope.launch { repository.moveToCollection(vinylId, java.time.LocalDateTime.now()) }
+    fun onMoveClick() {
+        _state.update { it.copy(moveDialogState = MoveDialogState.CONFIRM) }
+    }
+
+    fun dismissMoveConfirm() {
+        _state.update { it.copy(moveDialogState = MoveDialogState.NONE) }
+    }
+
+    fun confirmMove() {
+        viewModelScope.launch {
+            repository.moveToCollection(vinylId, LocalDateTime.now())
+            _state.update { it.copy(moveDialogState = MoveDialogState.CONGRATULATIONS) }
+        }
+    }
+
+    fun dismissCongratulations() {
+        _state.update { it.copy(moveDialogState = MoveDialogState.NONE, isDeleted = true) }
     }
 }

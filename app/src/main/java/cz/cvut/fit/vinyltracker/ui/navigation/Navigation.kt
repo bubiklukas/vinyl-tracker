@@ -11,7 +11,8 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import cz.cvut.fit.vinyltracker.ui.feature.collection.CollectionScreen
-import cz.cvut.fit.vinyltracker.ui.feature.detail.DetailScreen
+import cz.cvut.fit.vinyltracker.ui.feature.detail.CollectionDetailScreen
+import cz.cvut.fit.vinyltracker.ui.feature.detail.WishlistDetailScreen
 import cz.cvut.fit.vinyltracker.ui.feature.wishlist.WishlistScreen
 
 @Composable
@@ -27,16 +28,22 @@ fun Navigation(backStack: NavBackStack<NavKey>, innerPadding: PaddingValues) {
         entryProvider = entryProvider {
             entry<BackStackKey.Collection> {
                 CollectionScreen(
-                    onVinylClick = { backStack.add(BackStackKey.VinylDetail(it)) },
+                    onVinylClick = { backStack.add(BackStackKey.CollectionDetail(it)) },
                 )
             }
             entry<BackStackKey.Wishlist> {
                 WishlistScreen(
-                    onVinylClick = { backStack.add(BackStackKey.VinylDetail(it)) },
+                    onVinylClick = { backStack.add(BackStackKey.WishlistDetail(it)) },
                 )
             }
-            entry<BackStackKey.VinylDetail> { key ->
-                DetailScreen(
+            entry<BackStackKey.CollectionDetail> { key ->
+                CollectionDetailScreen(
+                    id = key.id,
+                    onBackClick = { backStack.removeLastOrNull() },
+                )
+            }
+            entry<BackStackKey.WishlistDetail> { key ->
+                WishlistDetailScreen(
                     id = key.id,
                     onBackClick = { backStack.removeLastOrNull() },
                 )

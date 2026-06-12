@@ -8,8 +8,10 @@ sealed class BackStackKey : NavKey {
 
     @Serializable data object Collection : BackStackKey()
     @Serializable data object Wishlist : BackStackKey()
-    @Serializable data class VinylDetail(val id: Long) : BackStackKey() {
+    @Serializable data class CollectionDetail(val id: Long) : BackStackKey() {
         override val showBottomBar = false
     }
-
+    @Serializable data class WishlistDetail(val id: Long) : BackStackKey() {
+        override val showBottomBar = false
+    }
 }

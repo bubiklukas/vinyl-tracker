@@ -9,7 +9,8 @@ import cz.cvut.fit.vinyltracker.domain.usecase.AddToCollectionUseCase
 import cz.cvut.fit.vinyltracker.domain.usecase.AddToWishlistUseCase
 import cz.cvut.fit.vinyltracker.ui.feature.add.AddViewModel
 import cz.cvut.fit.vinyltracker.ui.feature.collection.CollectionViewModel
-import cz.cvut.fit.vinyltracker.ui.feature.detail.DetailViewModel
+import cz.cvut.fit.vinyltracker.ui.feature.detail.CollectionDetailViewModel
+import cz.cvut.fit.vinyltracker.ui.feature.detail.WishlistDetailViewModel
 import cz.cvut.fit.vinyltracker.ui.feature.wishlist.WishlistViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
@@ -60,7 +61,8 @@ val appModule = module {
 
     viewModel { CollectionViewModel(get()) }
     viewModel { WishlistViewModel(get()) }
-    viewModel { params -> DetailViewModel(vinylId = params.get(), repository = get()) }
+    viewModel { params -> CollectionDetailViewModel(vinylId = params.get(), repository = get()) }
+    viewModel { params -> WishlistDetailViewModel(vinylId = params.get(), repository = get()) }
     viewModel { AddViewModel(get(), get(), get(), get()) }
 }
 

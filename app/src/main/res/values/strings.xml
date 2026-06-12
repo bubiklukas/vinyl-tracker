@@ -32,10 +32,19 @@
     <string name="detail_back">Back</string>
     <string name="detail_own_question">Do you already own this record?</string>
     <string name="detail_move_to_collection">Move to Collection</string>
-    <string name="detail_delete">Delete record</string>
+    <string name="detail_remove_from_collection">Remove from collection</string>
+    <string name="detail_remove_from_wishlist">Remove from wishlist</string>
     <string name="detail_owned_since">In your collection since %s</string>
     <string name="detail_tracklist">TRACKLIST</string>
     <string name="detail_not_found">Record not found</string>
+    <string name="detail_move_confirm_title">Move to Collection</string>
+    <string name="detail_move_confirm_text">Proceed with moving \"%s\" to your collection?</string>
+    <string name="detail_move_confirm_yes">Yes</string>
+    <string name="detail_move_confirm_no">Not yet</string>
+    <string name="detail_congratulations_title">Congratulations!</string>
+    <string name="detail_congratulations_text">\"%s\" is now in your collection.</string>
+    <string name="detail_congratulations_button">Awesome!</string>
+
 
     <!-- Content descriptions -->
     <string name="cd_close">Close</string>
