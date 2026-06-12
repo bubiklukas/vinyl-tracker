@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cz.cvut.fit.vinyltracker.data.repository.VinylRepository
 import cz.cvut.fit.vinyltracker.domain.Vinyl
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +23,7 @@ data class WishlistScreenState(
     val query: String = "",
 )
 
-@OptIn(FlowPreview::class)
+@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class WishlistViewModel(private val repository: VinylRepository) : ViewModel() {
     private val debounceMs = 300L
     private val _state = MutableStateFlow(WishlistScreenState())

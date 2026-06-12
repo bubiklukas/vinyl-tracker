@@ -34,7 +34,7 @@ interface VinylDao {
     @Query("SELECT * FROM vinyls WHERE owned = 0 AND (title LIKE '%' || :query || '%' OR artist LIKE '%' || :query || '%')")
     fun searchWishlist(query: String): Flow<List<VinylWithTracks>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insert(vinyl: VinylEntity): Long
 
     @Query("UPDATE vinyls SET owned = :owned WHERE id = :id")

@@ -20,8 +20,8 @@ import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
@@ -58,7 +58,7 @@ val appModule = module {
 
     viewModel { CollectionViewModel(get()) }
     viewModel { WishlistViewModel(get()) }
-    factory { params -> DetailViewModel(vinylId = params.get(), repository = get()) }
+    viewModel { params -> DetailViewModel(vinylId = params.get(), repository = get()) }
     viewModel { AddViewModel(get(), get(), get()) }
 }
 
