@@ -22,7 +22,7 @@
     <string name="add_search_empty_hint">Type an artist or album name to search iTunes</string>
     <string name="add_no_results">No results for \"%s\"</string>
     <string name="add_done">Done</string>
-    <string name="add_fab_label">Add</string>
+    <string name="add_fab_label">Add to Collection</string>
 
     <!-- Vinyl list item badges -->
     <string name="badge_collection">IN COLLECTION</string>
@@ -44,7 +44,6 @@
     <string name="detail_congratulations_title">Congratulations!</string>
     <string name="detail_congratulations_text">\"%s\" is now in your collection.</string>
     <string name="detail_congratulations_button">Awesome!</string>
-
 
     <!-- Content descriptions -->
     <string name="cd_close">Close</string>
