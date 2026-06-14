@@ -22,6 +22,7 @@
     <string name="add_search_empty_hint">Type an artist or album name to search iTunes</string>
     <string name="add_no_results">No results for \"%s\"</string>
     <string name="add_done">Done</string>
+    <string name="add_selected_header">%d SELECTED</string>
     <string name="add_fab_label">Add to Collection</string>
 
     <!-- Vinyl list item badges -->

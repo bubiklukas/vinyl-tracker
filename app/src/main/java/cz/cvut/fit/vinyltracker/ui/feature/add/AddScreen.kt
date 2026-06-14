@@ -2,6 +2,7 @@ package cz.cvut.fit.vinyltracker.ui.feature.add
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -113,38 +114,48 @@ private fun AddScreen(
             onQueryChange = onQueryChange,
         )
 
-        Spacer(Modifier.height(16.dp))
-
-        when {
-            state.isSearchLoading -> Box(
-                modifier = Modifier.fillMaxWidth().height(200.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator(color = Gold)
-            }
-
-            state.query.isBlank() || state.results.isEmpty() -> Box(
-                modifier = Modifier.fillMaxWidth().height(200.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null,
-                        tint = CharcoalMuted,
-                        modifier = Modifier.size(48.dp),
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    Text(
-                        text = if (state.query.isBlank()) stringResource(R.string.add_search_empty_hint)
-                               else stringResource(R.string.add_no_results, state.query),
-                        color = CharcoalMuted,
+        LazyColumn(contentPadding = PaddingValues(top = 16.dp)) {
+            if (state.selectedVinyls.isNotEmpty()) {
+                item(key = "selected_section") {
+                    SelectedVinylsSection(
+                        vinyls = state.selectedVinyls,
+                        isSaving = state.isSaving,
+                        onToggleVinyl = onToggleVinyl,
                     )
                 }
             }
 
-            else -> LazyColumn {
-                items(state.results, key = { it.itunesCollectionId ?: it.title }) { vinyl ->
+            when {
+                state.isSearchLoading -> item(key = "loading") {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().height(200.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        CircularProgressIndicator(color = Gold)
+                    }
+                }
+                state.query.isBlank() || state.results.isEmpty() -> item(key = "empty") {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().height(200.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = null,
+                                tint = CharcoalMuted,
+                                modifier = Modifier.size(48.dp),
+                            )
+                            Spacer(Modifier.height(12.dp))
+                            Text(
+                                text = if (state.query.isBlank()) stringResource(R.string.add_search_empty_hint)
+                                       else stringResource(R.string.add_no_results, state.query),
+                                color = CharcoalMuted,
+                            )
+                        }
+                    }
+                }
+                else -> items(state.results, key = { it.itunesCollectionId ?: it.title }) { vinyl ->
                     val collId = vinyl.itunesCollectionId
                     val existingOwned = collId?.let { state.existingVinyls[it] }
                     val isExisting = existingOwned != null
@@ -189,6 +200,39 @@ private fun AddScreen(
                     HorizontalDivider(color = Cream.copy(alpha = 0.05f))
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun SelectedVinylsSection(
+    vinyls: List<Vinyl>,
+    isSaving: Boolean,
+    onToggleVinyl: (Vinyl) -> Unit,
+) {
+    Column {
+        Text(
+            text = stringResource(R.string.add_selected_header, vinyls.size),
+            style = MaterialTheme.typography.labelMedium,
+            color = Gold,
+            modifier = Modifier.padding(bottom = 4.dp),
+        )
+        vinyls.forEach { vinyl ->
+            VinylListItem(
+                vinyl = vinyl,
+                onClick = { if (!isSaving) onToggleVinyl(vinyl) },
+                showBadge = false,
+                trailingContent = {
+                    IconButton(onClick = { if (!isSaving) onToggleVinyl(vinyl) }) {
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = stringResource(R.string.cd_vinyl_added),
+                            tint = SuccessGreen,
+                        )
+                    }
+                },
+            )
+            HorizontalDivider(color = Cream.copy(alpha = 0.05f))
         }
     }
 }
