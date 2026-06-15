@@ -192,7 +192,7 @@ private fun AddScreen(
                                     Text(
                                         text = stringResource(if (existingOwned) R.string.badge_collection else R.string.badge_wishlist),
                                         style = MaterialTheme.typography.labelSmall,
-                                        color = if (existingOwned) Gold else Teal,
+                                        color = Gold,
                                         modifier = Modifier.padding(end = 8.dp),
                                     )
                                 }

@@ -9,18 +9,24 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation3.runtime.rememberNavBackStack
 import cz.cvut.fit.vinyltracker.R
 import cz.cvut.fit.vinyltracker.ui.navigation.BackStackKey
 import cz.cvut.fit.vinyltracker.ui.navigation.Navigation
+import cz.cvut.fit.vinyltracker.ui.theme.Background
+import cz.cvut.fit.vinyltracker.ui.theme.CharcoalMuted
+import cz.cvut.fit.vinyltracker.ui.theme.Gold
 
 private data class BottomTab(
     val key: BackStackKey,
@@ -54,7 +60,7 @@ fun MainScreen() {
                 enter = slideInVertically { it },
                 exit = slideOutVertically { it },
             ) {
-                NavigationBar {
+                NavigationBar(containerColor = Background, contentColor = Gold) {
                     bottomTabs.forEachIndexed { index, tab ->
                         NavigationBarItem(
                             selected = currentTabIndex == index,
@@ -71,6 +77,13 @@ fun MainScreen() {
                                 )
                             },
                             label = { Text(stringResource(tab.labelRes)) },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Gold,
+                                selectedTextColor = Gold,
+                                unselectedIconColor = CharcoalMuted,
+                                unselectedTextColor = CharcoalMuted,
+                                indicatorColor = Color.Transparent,
+                            ),
                         )
                     }
                 }
