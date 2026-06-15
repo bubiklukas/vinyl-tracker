@@ -234,5 +234,6 @@ private fun SelectedVinylsSection(
             )
             HorizontalDivider(color = Cream.copy(alpha = 0.05f))
         }
+        HorizontalDivider(color = Cream.copy(alpha = 0.35f))
     }
 }
