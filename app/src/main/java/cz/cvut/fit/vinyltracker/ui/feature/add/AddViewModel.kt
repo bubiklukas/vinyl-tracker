@@ -8,6 +8,8 @@ import cz.cvut.fit.vinyltracker.domain.Vinyl
 import cz.cvut.fit.vinyltracker.domain.usecase.AddToCollectionUseCase
 import cz.cvut.fit.vinyltracker.domain.usecase.AddToWishlistUseCase
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -22,10 +24,8 @@ data class AddScreenState(
     val results: List<Vinyl> = emptyList(),
     val isSearchLoading: Boolean = false,
     val error: String? = null,
-    val existingVinyls: Map<Long, Boolean> = emptyMap(), // itunesCollectionId -> owned
-    val selectedVinyls: List<Vinyl> = emptyList(),
-    val isSaving: Boolean = false,
-    val isDone: Boolean = false,
+    val existingVinyls: Map<Long, Boolean> = emptyMap(),
+    val toastVisible: Boolean = false,
 )
 
 @OptIn(FlowPreview::class)
@@ -38,6 +38,8 @@ class AddViewModel(
 
     private val _state = MutableStateFlow(AddScreenState())
     val state = _state.asStateFlow()
+
+    private var toastJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -70,30 +72,15 @@ class AddViewModel(
         _state.update { it.copy(query = query) }
     }
 
-    fun onToggleVinyl(vinyl: Vinyl) {
-        val collId = vinyl.itunesCollectionId ?: return
-        _state.update { s ->
-            val isSelected = s.selectedVinyls.any { it.itunesCollectionId == collId }
-            if (isSelected) {
-                s.copy(selectedVinyls = s.selectedVinyls.filter { it.itunesCollectionId != collId })
-            } else {
-                s.copy(selectedVinyls = s.selectedVinyls + vinyl)
-            }
-        }
-    }
-
-    fun onDone(forCollection: Boolean) {
-        val toSave = _state.value.selectedVinyls
-        if (toSave.isEmpty()) {
-            _state.update { it.copy(isDone = true) }
-            return
-        }
+    fun onAddVinyl(vinyl: Vinyl, forCollection: Boolean) {
         viewModelScope.launch {
-            _state.update { it.copy(isSaving = true) }
-            toSave.forEach { vinyl ->
-                if (forCollection) addToCollectionUseCase(vinyl) else addToWishlistUseCase(vinyl)
+            if (forCollection) addToCollectionUseCase(vinyl) else addToWishlistUseCase(vinyl)
+            toastJob?.cancel()
+            toastJob = viewModelScope.launch {
+                _state.update { it.copy(toastVisible = true) }
+                delay(2500)
+                _state.update { it.copy(toastVisible = false) }
             }
-            _state.update { it.copy(isSaving = false, isDone = true) }
         }
     }
 }

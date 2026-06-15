@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
@@ -20,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -27,7 +29,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.cvut.fit.vinyltracker.R
+import cz.cvut.fit.vinyltracker.ui.components.FilterPillOption
+import cz.cvut.fit.vinyltracker.ui.components.FilterPillRow
 import cz.cvut.fit.vinyltracker.ui.components.SearchField
+import cz.cvut.fit.vinyltracker.ui.components.SortDirection
 import cz.cvut.fit.vinyltracker.ui.components.VinylListItem
 import cz.cvut.fit.vinyltracker.ui.feature.add.AddScreen
 import cz.cvut.fit.vinyltracker.ui.theme.Background
@@ -46,6 +51,7 @@ fun WishlistScreen(
         state = state,
         onVinylClick = onVinylClick,
         onQueryChange = viewModel::onQueryChange,
+        onSort = viewModel::onSort,
         onAddClick = viewModel::showAddSheet,
         onDismissSheet = viewModel::hideAddSheet,
     )
@@ -57,6 +63,7 @@ private fun WishlistScreen(
     state: WishlistScreenState,
     onVinylClick: (Long) -> Unit,
     onQueryChange: (String) -> Unit,
+    onSort: (WishlistSortField, SortDirection) -> Unit,
     onAddClick: () -> Unit,
     onDismissSheet: () -> Unit,
 ) {
@@ -107,13 +114,27 @@ private fun WishlistScreen(
                 state.vinyls.isEmpty() -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(stringResource(R.string.wishlist_empty), color = WarmMuted)
                 }
-                else -> LazyColumn {
-                    items(state.vinyls, key = { it.id }) { vinyl ->
-                        VinylListItem(
-                            vinyl = vinyl,
-                            onClick = { onVinylClick(vinyl.id) },
-                        )
-                        HorizontalDivider(color = Cream.copy(alpha = 0.05f))
+                else -> {
+                    FilterPillRow(
+                        options = listOf(
+                            FilterPillOption(WishlistSortField.NAME, stringResource(R.string.filter_sort_name)),
+                            FilterPillOption(WishlistSortField.ARTIST, stringResource(R.string.filter_sort_artist)),
+                        ),
+                        selected = state.sortField,
+                        direction = state.sortDirection,
+                        onSelect = onSort,
+                        modifier = Modifier.padding(bottom = 12.dp),
+                    )
+                    key(state.sortField, state.sortDirection) {
+                        LazyColumn(state = rememberLazyListState()) {
+                            items(state.vinyls, key = { it.id }) { vinyl ->
+                                VinylListItem(
+                                    vinyl = vinyl,
+                                    onClick = { onVinylClick(vinyl.id) },
+                                )
+                                HorizontalDivider(color = Cream.copy(alpha = 0.05f))
+                            }
+                        }
                     }
                 }
             }

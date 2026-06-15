@@ -24,10 +24,18 @@ class CollectionDetailViewModel(
         }
     }
 
+    fun requestDelete() {
+        _state.update { it.copy(showDeleteConfirm = true) }
+    }
+
+    fun dismissDeleteConfirm() {
+        _state.update { it.copy(showDeleteConfirm = false) }
+    }
+
     fun delete() {
         viewModelScope.launch {
             repository.delete(vinylId)
-            _state.update { it.copy(isDeleted = true) }
+            _state.update { it.copy(isDeleted = true, showDeleteConfirm = false) }
         }
     }
 }

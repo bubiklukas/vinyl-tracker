@@ -1,5 +1,10 @@
 package cz.cvut.fit.vinyltracker.ui.feature.add
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,10 +15,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,14 +29,13 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -40,8 +47,8 @@ import cz.cvut.fit.vinyltracker.ui.components.VinylListItem
 import cz.cvut.fit.vinyltracker.ui.theme.CharcoalMuted
 import cz.cvut.fit.vinyltracker.ui.theme.Cream
 import cz.cvut.fit.vinyltracker.ui.theme.Gold
-import cz.cvut.fit.vinyltracker.ui.theme.Teal
 import cz.cvut.fit.vinyltracker.ui.theme.SuccessGreen
+import cz.cvut.fit.vinyltracker.ui.theme.Teal
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -52,25 +59,27 @@ fun AddScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(state.isDone) {
-        if (state.isDone) onDismiss()
-    }
-
     AddScreen(
+        forCollection = forCollection,
         state = state,
         onQueryChange = viewModel::onQueryChange,
-        onToggleVinyl = viewModel::onToggleVinyl,
-        onDone = { viewModel.onDone(forCollection) },
+        onAddVinyl = { vinyl -> viewModel.onAddVinyl(vinyl, forCollection) },
+        onDismiss = onDismiss,
     )
 }
 
 @Composable
 private fun AddScreen(
+    forCollection: Boolean,
     state: AddScreenState,
     onQueryChange: (String) -> Unit,
-    onToggleVinyl: (Vinyl) -> Unit,
-    onDone: () -> Unit,
+    onAddVinyl: (Vinyl) -> Unit,
+    onDismiss: () -> Unit,
 ) {
+    val toastMessage = stringResource(
+        if (forCollection) R.string.add_toast_collection else R.string.add_toast_wishlist
+    )
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -87,27 +96,46 @@ private fun AddScreen(
                 color = Cream,
                 modifier = Modifier.weight(1f),
             )
-            TextButton(
-                onClick = onDone,
-                enabled = !state.isSaving,
+            IconButton(onClick = onDismiss) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(R.string.cd_close),
+                    tint = Cream,
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = state.toastVisible,
+            enter = slideInVertically { -it } + fadeIn(),
+            exit = slideOutVertically { -it } + fadeOut(),
+        ) {
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = SuccessGreen,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
             ) {
-                if (state.isSaving) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(16.dp),
-                        color = Gold,
-                        strokeWidth = 2.dp,
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.CheckCircle,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp),
                     )
-                } else {
+                    Spacer(Modifier.width(8.dp))
                     Text(
-                        text = stringResource(R.string.add_done),
-                        color = Gold,
+                        text = toastMessage,
+                        color = Color.White,
                         style = MaterialTheme.typography.labelLarge,
                     )
                 }
             }
         }
-
-        Spacer(Modifier.height(8.dp))
 
         SearchField(
             query = state.query,
@@ -115,20 +143,12 @@ private fun AddScreen(
         )
 
         LazyColumn(contentPadding = PaddingValues(top = 16.dp)) {
-            if (state.selectedVinyls.isNotEmpty()) {
-                item(key = "selected_section") {
-                    SelectedVinylsSection(
-                        vinyls = state.selectedVinyls,
-                        isSaving = state.isSaving,
-                        onToggleVinyl = onToggleVinyl,
-                    )
-                }
-            }
-
             when {
                 state.isSearchLoading -> item(key = "loading") {
                     Box(
-                        modifier = Modifier.fillMaxWidth().height(200.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         CircularProgressIndicator(color = Gold)
@@ -136,7 +156,9 @@ private fun AddScreen(
                 }
                 state.query.isBlank() || state.results.isEmpty() -> item(key = "empty") {
                     Box(
-                        modifier = Modifier.fillMaxWidth().height(200.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -159,13 +181,11 @@ private fun AddScreen(
                     val collId = vinyl.itunesCollectionId
                     val existingOwned = collId?.let { state.existingVinyls[it] }
                     val isExisting = existingOwned != null
-                    val isSelected = collId != null && state.selectedVinyls.any { it.itunesCollectionId == collId }
 
                     VinylListItem(
                         vinyl = vinyl,
-                        onClick = { if (!isExisting && !state.isSaving) onToggleVinyl(vinyl) },
+                        onClick = { if (!isExisting) onAddVinyl(vinyl) },
                         showBadge = false,
-                        modifier = if (isExisting) Modifier.alpha(0.38f) else Modifier,
                         trailingContent = {
                             when {
                                 isExisting -> Row(verticalAlignment = Alignment.CenterVertically) {
@@ -176,18 +196,7 @@ private fun AddScreen(
                                         modifier = Modifier.padding(end = 8.dp),
                                     )
                                 }
-                                isSelected -> IconButton(
-                                    onClick = { if (!state.isSaving) onToggleVinyl(vinyl) },
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.CheckCircle,
-                                        contentDescription = stringResource(R.string.cd_vinyl_added),
-                                        tint = SuccessGreen,
-                                    )
-                                }
-                                else -> IconButton(
-                                    onClick = { if (!state.isSaving) onToggleVinyl(vinyl) },
-                                ) {
+                                else -> IconButton(onClick = { onAddVinyl(vinyl) }) {
                                     Icon(
                                         imageVector = Icons.Outlined.AddCircle,
                                         contentDescription = stringResource(R.string.cd_add_vinyl),
@@ -201,39 +210,5 @@ private fun AddScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun SelectedVinylsSection(
-    vinyls: List<Vinyl>,
-    isSaving: Boolean,
-    onToggleVinyl: (Vinyl) -> Unit,
-) {
-    Column {
-        Text(
-            text = stringResource(R.string.add_selected_header, vinyls.size),
-            style = MaterialTheme.typography.labelMedium,
-            color = Gold,
-            modifier = Modifier.padding(bottom = 4.dp),
-        )
-        vinyls.forEach { vinyl ->
-            VinylListItem(
-                vinyl = vinyl,
-                onClick = { if (!isSaving) onToggleVinyl(vinyl) },
-                showBadge = false,
-                trailingContent = {
-                    IconButton(onClick = { if (!isSaving) onToggleVinyl(vinyl) }) {
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = stringResource(R.string.cd_vinyl_added),
-                            tint = SuccessGreen,
-                        )
-                    }
-                },
-            )
-            HorizontalDivider(color = Cream.copy(alpha = 0.05f))
-        }
-        HorizontalDivider(color = Cream.copy(alpha = 0.35f))
     }
 }
