@@ -1,5 +1,6 @@
 package cz.cvut.fit.vinyltracker.ui.feature.detail.components
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,12 +20,12 @@ import cz.cvut.fit.vinyltracker.ui.theme.WarmMuted
 @Composable
 fun DetailLoadingWrapper(
     state: DetailScreenState,
-    scrollOffset: Int = 0,
+    scrollState: ScrollState = ScrollState(0),
     glowBackground: Boolean,
     content: @Composable (Vinyl) -> Unit,
 ) {
     Box(Modifier.fillMaxSize().background(Background)) {
-        if (glowBackground) GlowBackground(coverUrl = state.vinyl?.coverUrl, scrollOffset = scrollOffset)
+        if (glowBackground) GlowBackground(coverUrl = state.vinyl?.coverUrl, scrollState = scrollState)
         when {
             state.isLoading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(color = Gold)

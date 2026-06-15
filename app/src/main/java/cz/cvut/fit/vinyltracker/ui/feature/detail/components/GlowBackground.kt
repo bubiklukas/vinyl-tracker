@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.ScrollState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.palette.graphics.Palette
@@ -35,7 +36,7 @@ private const val GLOW_ANIMATION_MS = 1000
 private const val GLOW_BLUR_RADIUS = 60
 
 @Composable
-fun GlowBackground(coverUrl: String?, scrollOffset: Int = 0) {
+fun GlowBackground(coverUrl: String?, scrollState: ScrollState = ScrollState(0)) {
     val context = LocalContext.current
     var dominantColor by remember(coverUrl) { mutableStateOf(Color.Transparent) }
     val animatedColor by animateColorAsState(
@@ -70,7 +71,7 @@ fun GlowBackground(coverUrl: String?, scrollOffset: Int = 0) {
         drawRect(
             brush = Brush.radialGradient(
                 colors = listOf(animatedColor, Color.Transparent),
-                center = Offset(size.width / 2f, size.height * GLOW_CENTER_Y_FACTOR - scrollOffset),
+                center = Offset(size.width / 2f, size.height * GLOW_CENTER_Y_FACTOR - scrollState.value),
                 radius = size.width * GLOW_RADIUS_FACTOR,
             )
         )

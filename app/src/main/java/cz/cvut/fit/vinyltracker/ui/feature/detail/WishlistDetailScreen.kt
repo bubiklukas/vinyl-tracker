@@ -71,7 +71,7 @@ fun WishlistDetailScreen(
 
     DetailLoadingWrapper(
         state = state,
-        scrollOffset = scrollState.value,
+        scrollState = scrollState,
         glowBackground = false
     ) { vinyl ->
         WishlistDetailScreen(
