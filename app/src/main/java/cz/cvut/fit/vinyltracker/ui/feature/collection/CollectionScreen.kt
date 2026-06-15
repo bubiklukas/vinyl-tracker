@@ -127,7 +127,9 @@ private fun CollectionScreen(
                         modifier = Modifier.padding(bottom = 12.dp),
                     )
                     key(state.sortField, state.sortDirection) {
-                        LazyColumn(state = rememberLazyListState()) {
+                        LazyColumn(
+                            state = rememberLazyListState(),
+                        ) {
                             items(state.vinyls, key = { it.id }) { vinyl ->
                                 VinylListItem(
                                     vinyl = vinyl,

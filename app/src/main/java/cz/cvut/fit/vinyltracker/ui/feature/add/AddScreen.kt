@@ -48,7 +48,6 @@ import cz.cvut.fit.vinyltracker.ui.theme.CharcoalMuted
 import cz.cvut.fit.vinyltracker.ui.theme.Cream
 import cz.cvut.fit.vinyltracker.ui.theme.Gold
 import cz.cvut.fit.vinyltracker.ui.theme.SuccessGreen
-import cz.cvut.fit.vinyltracker.ui.theme.Teal
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -192,7 +191,7 @@ private fun AddScreen(
                                     Text(
                                         text = stringResource(if (existingOwned) R.string.badge_collection else R.string.badge_wishlist),
                                         style = MaterialTheme.typography.labelSmall,
-                                        color = if (existingOwned) Gold else Teal,
+                                        color = Gold,
                                         modifier = Modifier.padding(end = 8.dp),
                                     )
                                 }

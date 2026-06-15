@@ -29,7 +29,6 @@ import cz.cvut.fit.vinyltracker.domain.Vinyl
 import cz.cvut.fit.vinyltracker.ui.theme.CharcoalMuted
 import cz.cvut.fit.vinyltracker.ui.theme.Cream
 import cz.cvut.fit.vinyltracker.ui.theme.Gold
-import cz.cvut.fit.vinyltracker.ui.theme.Teal
 import cz.cvut.fit.vinyltracker.ui.theme.WarmMuted
 
 @Composable
@@ -86,7 +85,7 @@ fun VinylListItem(
             Text(
                 text = stringResource(if (vinyl.owned) R.string.badge_collection else R.string.badge_wishlist),
                 style = MaterialTheme.typography.labelSmall,
-                color = if (vinyl.owned) Gold else Teal,
+                color = Gold,
                 modifier = Modifier.padding(horizontal = 8.dp),
             )
         }

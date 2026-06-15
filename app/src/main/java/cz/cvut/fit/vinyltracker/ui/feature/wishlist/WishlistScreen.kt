@@ -2,6 +2,7 @@ package cz.cvut.fit.vinyltracker.ui.feature.wishlist
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,6 +38,7 @@ import cz.cvut.fit.vinyltracker.ui.components.VinylListItem
 import cz.cvut.fit.vinyltracker.ui.feature.add.AddScreen
 import cz.cvut.fit.vinyltracker.ui.theme.Background
 import cz.cvut.fit.vinyltracker.ui.theme.Cream
+import cz.cvut.fit.vinyltracker.ui.theme.Gold
 import cz.cvut.fit.vinyltracker.ui.theme.Teal
 import cz.cvut.fit.vinyltracker.ui.theme.WarmMuted
 import org.koin.androidx.compose.koinViewModel
@@ -81,7 +83,7 @@ private fun WishlistScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = onAddClick,
-                containerColor = Teal,
+                containerColor = Gold,
                 contentColor = Background,
                 icon = { Icon(Icons.Default.Add, contentDescription = null) },
                 text = { Text(stringResource(R.string.wishlist_fab_label), fontWeight = FontWeight.Bold) },
@@ -126,7 +128,10 @@ private fun WishlistScreen(
                         modifier = Modifier.padding(bottom = 12.dp),
                     )
                     key(state.sortField, state.sortDirection) {
-                        LazyColumn(state = rememberLazyListState()) {
+                        LazyColumn(
+                            state = rememberLazyListState(),
+                            contentPadding = PaddingValues(bottom = 88.dp),
+                        ) {
                             items(state.vinyls, key = { it.id }) { vinyl ->
                                 VinylListItem(
                                     vinyl = vinyl,
