@@ -29,7 +29,6 @@ import cz.cvut.fit.vinyltracker.domain.Vinyl
 import cz.cvut.fit.vinyltracker.ui.theme.CharcoalMuted
 import cz.cvut.fit.vinyltracker.ui.theme.Cream
 import cz.cvut.fit.vinyltracker.ui.theme.Gold
-import cz.cvut.fit.vinyltracker.ui.theme.Teal
 import cz.cvut.fit.vinyltracker.ui.theme.WarmMuted
 
 @Composable

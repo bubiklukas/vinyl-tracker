@@ -48,7 +48,6 @@ import cz.cvut.fit.vinyltracker.ui.theme.CharcoalMuted
 import cz.cvut.fit.vinyltracker.ui.theme.Cream
 import cz.cvut.fit.vinyltracker.ui.theme.Gold
 import cz.cvut.fit.vinyltracker.ui.theme.SuccessGreen
-import cz.cvut.fit.vinyltracker.ui.theme.Teal
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
