@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">Vinyl Tracker</string>
+
+    <!-- Bottom navigation tabs -->
+    <string name="tab_collection">Collection</string>
+    <string name="tab_wishlist">Wishlist</string>
+
+    <!-- Search field -->
+    <string name="search_placeholder">Search artist or album…</string>
+
+    <!-- Collection screen -->
+    <string name="collection_title">Collection</string>
+    <string name="collection_empty">No records yet</string>
+
+    <!-- Wishlist screen -->
+    <string name="wishlist_title">Wishlist</string>
+    <string name="wishlist_empty">No records on wishlist yet</string>
+    <string name="wishlist_fab_label">Add to Wishlist</string>
+
+    <!-- Add record sheet -->
+    <string name="add_title">Add a record</string>
+    <string name="add_search_empty_hint">Type an artist or album name to search iTunes</string>
+    <string name="add_no_results">No results for \"%s\"</string>
+    <string name="add_done">Done</string>
+    <string name="add_selected_header">%d SELECTED</string>
+    <string name="add_fab_label">Add to Collection</string>
+
+    <!-- Vinyl list item badges -->
+    <string name="badge_collection">IN COLLECTION</string>
+    <string name="badge_wishlist">IN WISHLIST</string>
+
+    <!-- Detail screen -->
+    <string name="detail_back">Back</string>
+    <string name="detail_own_question">Do you already own this record?</string>
+    <string name="detail_move_to_collection">Move to Collection</string>
+    <string name="detail_remove_from_collection">Remove from collection</string>
+    <string name="detail_remove_from_wishlist">Remove from wishlist</string>
+    <string name="detail_owned_since">In your collection since %s</string>
+    <string name="detail_tracklist">TRACKLIST</string>
+    <string name="detail_not_found">Record not found</string>
+    <string name="detail_move_confirm_title">Move to Collection</string>
+    <string name="detail_move_confirm_text">Proceed with moving \"%s\" to your collection?</string>
+    <string name="detail_move_confirm_yes">Yes</string>
+    <string name="detail_move_confirm_no">Not yet</string>
+    <string name="detail_congratulations_title">Congratulations!</string>
+    <string name="detail_congratulations_text">\"%s\" is now in your collection.</string>
+    <string name="detail_congratulations_button">Awesome!</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_close">Close</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_navigate_to_detail">Navigate to detail</string>
+    <string name="cd_tab_collection">Collection tab</string>
+    <string name="cd_tab_wishlist">Wishlist tab</string>
+    <string name="cd_album_cover">Album cover</string>
+    <string name="cd_move_to_wishlist">Move to wishlist</string>
+    <string name="cd_move_to_collection">Move to collection</string>
+    <string name="cd_delete_record">Delete record</string>
+    <string name="cd_add_vinyl">Add vinyl</string>
+    <string name="cd_vinyl_added">Vinyl added</string>
+</resources>

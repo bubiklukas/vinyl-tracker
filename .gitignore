@@ -16,7 +16,7 @@ captures/
 *.apk
 output-metadata.json
 
-# IntelliJ
+# IntelliJ / Android Studio
 *.iml
 .idea/
 misc.xml
@@ -32,3 +32,15 @@ google-services.json
 
 # Android Profiling
 *.hprof
+*.hprof.index
+
+# Kotlin build cache
+.kotlin/
+
+# API keys / secrets (never commit these)
+secrets.properties
+apikeys.properties
+
+# Windows OS files
+Thumbs.db
+desktop.ini
