@@ -20,8 +20,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -126,17 +126,15 @@ private fun CollectionScreen(
                         onSelect = onSort,
                         modifier = Modifier.padding(bottom = 12.dp),
                     )
-                    val listState = rememberLazyListState()
-                    LaunchedEffect(state.sortField, state.sortDirection) {
-                        listState.scrollToItem(0)
-                    }
-                    LazyColumn(state = listState) {
-                        items(state.vinyls, key = { it.id }) { vinyl ->
-                            VinylListItem(
-                                vinyl = vinyl,
-                                onClick = { onVinylClick(vinyl.id) },
-                            )
-                            HorizontalDivider(color = Cream.copy(alpha = 0.05f))
+                    key(state.sortField, state.sortDirection) {
+                        LazyColumn(state = rememberLazyListState()) {
+                            items(state.vinyls, key = { it.id }) { vinyl ->
+                                VinylListItem(
+                                    vinyl = vinyl,
+                                    onClick = { onVinylClick(vinyl.id) },
+                                )
+                                HorizontalDivider(color = Cream.copy(alpha = 0.05f))
+                            }
                         }
                     }
                 }
