@@ -48,7 +48,7 @@ fun CollectionDetailScreen(
 
     DetailLoadingWrapper(
         state = state,
-        scrollOffset = scrollState.value,
+        scrollState = scrollState,
         glowBackground = true
     ) { vinyl ->
         CollectionDetailScreen(
