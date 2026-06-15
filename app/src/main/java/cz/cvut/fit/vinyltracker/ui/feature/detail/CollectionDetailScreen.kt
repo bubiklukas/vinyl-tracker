@@ -18,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.cvut.fit.vinyltracker.R
 import cz.cvut.fit.vinyltracker.domain.Vinyl
 import cz.cvut.fit.vinyltracker.ui.feature.detail.components.ButtonDelete
+import cz.cvut.fit.vinyltracker.ui.feature.detail.components.DeleteConfirmDialog
 import cz.cvut.fit.vinyltracker.ui.feature.detail.components.DetailLoadingWrapper
 import cz.cvut.fit.vinyltracker.ui.feature.detail.components.OwnedSinceText
 import cz.cvut.fit.vinyltracker.ui.feature.detail.components.TopBar
@@ -37,6 +38,14 @@ fun CollectionDetailScreen(
 
     LaunchedEffect(state.isDeleted) { if (state.isDeleted) onBackClick() }
 
+    if (state.showDeleteConfirm) {
+        DeleteConfirmDialog(
+            vinylTitle = state.vinyl?.title.orEmpty(),
+            onConfirm = viewModel::delete,
+            onDismiss = viewModel::dismissDeleteConfirm,
+        )
+    }
+
     DetailLoadingWrapper(
         state = state,
         scrollOffset = scrollState.value,
@@ -45,7 +54,7 @@ fun CollectionDetailScreen(
         CollectionDetailScreen(
             vinyl = vinyl,
             onBackClick = onBackClick,
-            onDelete = viewModel::delete,
+            onDelete = viewModel::requestDelete,
             scrollState = scrollState,
         )
     }
@@ -78,3 +87,4 @@ private fun CollectionDetailScreen(
         ButtonDelete(stringResource(R.string.detail_remove_from_collection), onDelete)
     }
 }
+

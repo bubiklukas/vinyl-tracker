@@ -20,6 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.cvut.fit.vinyltracker.R
 import cz.cvut.fit.vinyltracker.domain.Vinyl
 import cz.cvut.fit.vinyltracker.ui.feature.detail.components.ButtonDelete
+import cz.cvut.fit.vinyltracker.ui.feature.detail.components.DeleteConfirmDialog
 import cz.cvut.fit.vinyltracker.ui.feature.detail.components.DetailLoadingWrapper
 import cz.cvut.fit.vinyltracker.ui.feature.detail.components.MoveToCollectionSection
 import cz.cvut.fit.vinyltracker.ui.feature.detail.components.TopBar
@@ -60,6 +61,14 @@ fun WishlistDetailScreen(
         MoveDialogState.NONE, MoveDialogState.NAVIGATE_TO_COLLECTION -> Unit
     }
 
+    if (state.showDeleteConfirm) {
+        DeleteConfirmDialog(
+            vinylTitle = state.vinyl?.title.orEmpty(),
+            onConfirm = viewModel::delete,
+            onDismiss = viewModel::dismissDeleteConfirm,
+        )
+    }
+
     DetailLoadingWrapper(
         state = state,
         scrollOffset = scrollState.value,
@@ -69,7 +78,7 @@ fun WishlistDetailScreen(
             vinyl = vinyl,
             onBackClick = onBackClick,
             onMoveClick = viewModel::onMoveClick,
-            onDelete = viewModel::delete,
+            onDelete = viewModel::requestDelete,
             scrollState = scrollState,
         )
     }

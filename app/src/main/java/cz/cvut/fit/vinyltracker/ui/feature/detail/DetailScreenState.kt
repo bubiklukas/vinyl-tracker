@@ -8,5 +8,6 @@ data class DetailScreenState(
     val vinyl: Vinyl? = null,
     val isLoading: Boolean = true,
     val isDeleted: Boolean = false,
+    val showDeleteConfirm: Boolean = false,
     val moveDialogState: MoveDialogState = MoveDialogState.NONE,
 )
